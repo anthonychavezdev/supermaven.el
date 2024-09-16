@@ -1,8 +1,18 @@
+;;; supermaven-process.el --- Supermaven process management -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;; This file provides functionality to manage the Supermaven process.
+
+;;; Code:
+
+
 (require 'json)
 
 (defconst supermaven-buffer "*supermaven-messages*")
-(defcustom supermaven-blob-path "/home/chep/outils/supermaven/sm-agent"
-  "Path to the supermaven blob"
+(defcustom supermaven-blob-path (concat user-emacs-directory "supermaven/sm-agent")
+  "Path to the supermaven binary"
+  :type 'string
   :group 'supermaven)
 
 (defvar supermaven-process nil)
