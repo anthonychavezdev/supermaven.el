@@ -26,16 +26,6 @@
           (supermaven--get-platform)
           (supermaven--get-architecture)))
 
-(defun supermaven-install ()
-  "Fetch the Supermaven binary if it doesn't exist."
-  (interactive)
-  (let ((directory (file-name-directory supermaven-blob-path)))
-    (if (file-exists-p supermaven-blob-path)
-        (progn
-          (message (format "Supermaven binary already exists at %s" supermaven-blob-path))
-          supermaven-blob-path)
-      (supermaven--download-binary directory))))
-
 (defun supermaven--fetch-json (url)
   "Fetch and parse returned json from URL."
   (with-current-buffer (url-retrieve-synchronously url)

@@ -1,4 +1,5 @@
 (require 'supermaven-process)
+(require 'fetch-binary)
 
 (defvar supermaven-next-id 0)
 
@@ -8,6 +9,16 @@
 (defface supermaven-overlay-face
   '((t :inherit shadow))
   "Face for Supermaven overlay.")
+
+(defun supermaven-install ()
+  "Fetch the Supermaven binary if it doesn't exist."
+  (interactive)
+  (let ((directory (file-name-directory supermaven-blob-path)))
+    (if (file-exists-p supermaven-blob-path)
+        (progn
+          (message (format "Supermaven binary already exists at %s" supermaven-blob-path))
+          supermaven-blob-path)
+      (supermaven--download-binary directory))))
 
 
 (defun supermaven-start()
