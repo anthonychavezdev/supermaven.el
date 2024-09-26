@@ -26,11 +26,9 @@
   (supermaven-process-start 'supermaven-compl-callback)
   (setq supermaven-next-id 0))
 
-(defun supermaven-use-free()
+(defun supermaven-use-free ()
   (interactive)
-  (process-send-string supermaven-process
-					   (concat (json-serialize #s(hash-table test equal data ("kind" "use_free_version")))
-							   "\n")))
+  (supermaven-send-json (list :kind "use_free_version")))
 
 (defun supermaven-complete()
   (interactive)
