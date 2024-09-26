@@ -36,27 +36,28 @@
   (interactive)
   (supermaven-on-update (current-buffer) t))
 
+(defun supermaven-make-cursor-update (buffer)
+  "Create a cursor update for BUFFER."
+  (list :kind "cursor_update"
+        :path (buffer-file-name buffer)
+        :offset (with-current-buffer buffer (point))))
+
+(defun supermaven-make-file-update (buffer)
+  "Create a file update for BUFFER."
+  (list :kind "file_update"
+        :path (buffer-file-name buffer)
+        :content (with-current-buffer buffer
+                   (buffer-substring-no-properties (point-min) (point-max)))))
+
 (defun supermaven-on-update (buffer do-send-file)
-  (let* ((hash (make-hash-table :test 'equal))
-		 (updates))
+  (let ((hash (make-hash-table :test 'equal))
+		 (updates (vector (supermaven-make-cursor-update buffer))))
 	(puthash "newId" (number-to-string supermaven-next-id) hash)
 	(setq supermaven-next-id (+ 1 supermaven-next-id))
 	(puthash "kind" "state_update" hash)
 
-	;; always cursor
-	(let ((cursor (make-hash-table :test 'equal)))
-	  (puthash "kind" "cursor_update" cursor)
-	  (puthash "path" (buffer-file-name buffer) cursor)
-	  (puthash "offset" (point) cursor)
-	  (setq updates (vector cursor)))
-
 	(when do-send-file
-	  (let ((file (make-hash-table :test 'equal)))
-		(puthash "kind" "file_update" file)
-		(puthash "path" (buffer-file-name buffer) file)
-		(with-current-buffer buffer
-		  (puthash "content" (buffer-substring-no-properties (point-min) (point-max)) file))
-		(setq updates (vconcat updates (vector file)))))
+	  (setq updates (vconcat updates (vector (supermaven-make-file-update buffer)))))
 
 	(puthash "updates" updates hash)
 
