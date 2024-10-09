@@ -9,6 +9,8 @@
 
 (require 'json)
 
+(defvar supermaven-dust-strings nil)
+
 (defconst supermaven-process-buffer "*supermaven-process*")
 
 (defcustom supermaven-blob-path (concat user-emacs-directory "supermaven/sm-agent")
@@ -124,7 +126,9 @@
 
 
 (defun supermaven-update-metadata (json)
-  (supermaven-log 'debug "Received metadata update: %s" json))
+  (supermaven-log 'debug "Received metadata update: %s" json)
+  (when-let ((dust-strings (alist-get 'dustStrings json)))
+    (setq supermaven-dust-strings dust-strings)))
 
 (defun supermaven-handle-activation-request (json)
   (with-current-buffer (get-buffer-create supermaven-process-buffer)
