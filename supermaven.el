@@ -102,8 +102,4 @@
   (interactive)
   (supermaven-clear-overlay))
 
-(defun supermaven-complete ()
-  (interactive)
-  (supermaven-on-update (current-buffer) t))
-
 (provide 'supermaven)
